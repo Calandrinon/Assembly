@@ -1,4 +1,4 @@
-# Tools for Computer System Architecture lab
+# Tools For x86 Assembly Windows Lab (Running On Linux)
 Some tools for the computer system architecture lab and a bash script written by me to automate the assembling process for Linux with wine.
 
 Run the script "script" from the folder /npp/. Usage:
