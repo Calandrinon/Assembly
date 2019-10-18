@@ -1,0 +1,4 @@
+#!/bin/bash
+wine ../nasm/nasm.exe -fobj "$1.asm"
+wine ../nasm/ALINK.EXE -oPE -subsys console -entry start "$1.obj"
+wine ../ollydbg/ollydbg.exe "$1.exe"
