@@ -13,7 +13,6 @@ segment data use32 class=data
     f DB "%d/%d=%d", 0
     a_equals DB "a=", 0
     b_equals DB "b=", 0
-    f2 DB "%d"
     format_scanf DB "%d", 0 
     
 segment code use32 class=code
@@ -24,7 +23,7 @@ start:
     add ESP, 4*1
     
     push dword a
-    push dword f2
+    push dword format_scanf
     call [scanf]
     add ESP, 4*2
     
@@ -33,7 +32,7 @@ start:
     add ESP, 4*1
     
     push dword b
-    push dword f2
+    push dword format_scanf
     call [scanf]
     add ESP, 4*2
     ;---------------------
