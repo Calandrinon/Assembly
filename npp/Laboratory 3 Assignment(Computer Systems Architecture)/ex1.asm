@@ -20,9 +20,6 @@ start:
     add AX, word [c]   ;;; AX = AX + word [c] = 125 + 125 = 250 = 00FAh
     adc DX, word [c+2] ;;; DX = DX + 0 + CF = 0 + 0 + 0         = 0000h
                        ;;; DX:AX = 0000:00FAh
-    
-    ;;;Now we convert the byte [a] to a double word to subtract it from 
-    ;;;DX:AX, where (c+c) is stored. 
                        
     ;;;Now we subtract a from (c+c)
     sub AL, [a]        ;;; AL = AL - [a] = 250 - 2 = 248 = F8h
@@ -48,12 +45,13 @@ start:
     
     ;;;Now we need to do the following subtraction (c+c-a)-(d+d)
     ;;;(c+c-a) is stored in EAX, and (d+d) is stored in ECX:EBX
-    mov EDX, 0
+    mov EDX, 0         ;;;Conversion of EAX to EDX:EAX
     sub EAX, EBX       ;;;EAX = EAX - EBX = 248 - 160 = 88 = 00000058h
     sbb EDX, ECX       ;;;EDX = EDX - ECX = 0 - 0          = 00000000h
     ;;;EDX:EAX = 00000000:00000058h    ---> (c+c-a)-(d+d)
     
     ;;;We will subtract the word [b] from the quad word EDX:EAX
     sub AX, [b] ;;;EAX = EAX - [b] = 88 - 15 = 73 = 00000049h 
+    ;;; So the result is 73 and stored in EDX:EAX
     push dword 0
     call [exit]

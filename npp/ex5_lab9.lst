@@ -1,0 +1,107 @@
+     1                                  ; The following code will open a file called "ana.txt" from current folder,
+     2                                  ; and it will read maximum 100 characters from this file.
+     3                                  
+     4                                  ; The program will use:
+     5                                  ; - the function fopen() to open/create the file
+     6                                  ; - the function fread() to read from file
+     7                                  ; - the function fclose() to close the created file.
+     8                                  
+     9                                  ; Because the fopen() call uses the file access mode "r", the file will be open for
+    10                                  ; reading. The file must exist, otherwise the fopen() call will fail.
+    11                                  ; For details about the file access modes see the section "Theory".
+    12                                  
+    13                                  bits 32
+    14                                  
+    15                                  global start
+    16                                  
+    17                                  ; declare external functions needed by our program
+    18                                  extern exit, fopen, fread, fclose, printf
+    19                                  import exit msvcrt.dll
+    20                                  import fopen msvcrt.dll
+    21                                  import fread msvcrt.dll
+    22                                  import fclose msvcrt.dll
+    23                                  import printf msvcrt.dll
+    24                                  
+    25                                  ; our data is declared here (the variables needed by our program)
+    26                                  segment data use32 class=data
+    27 00000000 00                          nr db 0
+    28 00000001 66696C652E74787400          file_name db "file.txt", 0   ; filename to be read
+    29 0000000A 7200                        access_mode db "r", 0       ; file access mode:
+    30                                                                  ; r - opens a file for reading. The file must exist. 
+    31 0000000C FFFFFFFF                    file_descriptor dd -1       ; variable to hold the file descriptor
+    32                                      len equ 100                 ; maximum number of characters to read
+    33 00000010 00<rept>                    text times len db 0         ; string to hold the text which is read from file
+    34 00000074 21402324255E262A28-         special_characters db "!@#$%^&*()-=_+"
+    34 0000007D 292D3D5F2B         
+    35                                      len_sp_chars equ $-special_characters
+    36 00000082 256400                      format db "%d", 0
+    37                                      
+    38                                  ; our code starts here
+    39                                  segment code use32 class=code
+    40                                      start:
+    41                                          ; call fopen() to create the file
+    42                                          ; fopen() will return a file descriptor in the EAX or 0 in case of error
+    43                                          ; eax = fopen(file_name, access_mode)
+    44 00000000 68[0A000000]                    push dword access_mode     
+    45 00000005 68[01000000]                    push dword file_name
+    46 0000000A FF15[00000000]                  call [fopen]
+    47 00000010 83C408                          add esp, 4*2                ; clean-up the stack
+    48                                  
+    49                                          
+    50                                          
+    51 00000013 A3[0C000000]                    mov [file_descriptor], eax  ; store the file descriptor returned by fopen
+    52                                  
+    53                                          ; check if fopen() has successfully created the file (EAX != 0)
+    54 00000018 83F800                          cmp eax, 0
+    55 0000001B 745B                            je final
+    56                                  
+    57                                          ; read the text from file using fread()
+    58                                          ; after the fread() call, EAX will contain the number of chars we've read 
+    59                                          ; eax = fread(text, 1, len, file_descriptor)
+    60 0000001D FF35[0C000000]                  push dword [file_descriptor]
+    61 00000023 6A64                            push dword len
+    62 00000025 6A01                            push dword 1
+    63 00000027 68[10000000]                    push dword text        
+    64 0000002C FF15[00000000]                  call [fread]
+    65 00000032 83C410                          add esp, 4*4
+    66                                  
+    67 00000035 BE00000000                      mov ESI, 0
+    68                                          
+    69                                          re:
+    70                                              
+    71 0000003A B90E000000                          mov ECX, len_sp_chars
+    72                                              is_special_char:
+    73 0000003F 8B86[10000000]                          mov EAX, [text+ESI]
+    74 00000045 3B81[74000000]                          cmp EAX, [special_characters+ECX]
+    75 0000004B 7433                                    je increment_nr
+    76                                                  continue:
+    77 0000004D E2F0                                loop is_special_char
+    78                                        
+    79 0000004F 46                                  inc ESI
+    80                                          
+    81 00000050 83FE64                          cmp ESI, len
+    82 00000053 75E5                            jne re
+    83                                          
+    84                                          
+    85                                          ; call fclose() to close the file
+    86                                          ; fclose(file_descriptor)
+    87 00000055 FF35[0C000000]                  push dword [file_descriptor]
+    88 0000005B FF15[00000000]                  call [fclose]
+    89 00000061 83C404                          add esp, 4
+    90                                  
+    91                                          
+    92 00000064 FF35[00000000]                  push dword [nr]
+    93 0000006A 68[82000000]                    push dword format
+    94 0000006F FF15[00000000]                  call [printf]
+    95 00000075 83C408                          add ESP, 4*2
+    96                                          
+    97                                      final:
+    98                                  
+    99                                          ; exit(0)
+   100 00000078 6A00                            push dword 0
+   101 0000007A FF15[00000000]                  call [exit]
+   102                                          
+   103                                      increment_nr:
+   104 00000080 FE05[00000000]                  inc byte [nr]
+   105 00000086 EBC5                            jmp continue
+   106                                              

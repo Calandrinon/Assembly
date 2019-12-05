@@ -1,0 +1,75 @@
+     1                                  bits 32
+     2                                  global start
+     3                                  
+     4                                  extern exit
+     5                                  import exit msvcrt.dll
+     6                                  
+     7                                  segment data use32 class=data
+     8 00000000 02                          a DB 2
+     9 00000001 0F000000                    b DD 15
+    10 00000005 0C                          c DB 12
+    11 00000006 B0FFFFFFFFFFFFFF            x DQ -80
+    12                                  segment code use32 class=code
+    13                                  start:
+    14                                      ;;; Signed representation			Exercise 17
+    15                                      ;;; x-(a*a+b)/(a+c/a); a,c-byte; b-doubleword; x-qword
+    16                                      
+    17                                      ;;; First we compute (a+c/a)
+    18                                      ;;; We convert c to a word
+    19 00000000 A0[05000000]                mov AL, [c]                     ;;; AL = 0Ch = 12
+    20 00000005 6698                        cbw                             ;;; AX = 000Ch=12
+    21 00000007 F63D[00000000]              idiv byte [a]                   ;;; AL = 06h  = 6
+    22                                                                      ;;; AH = 00h  = 0
+    23 0000000D 0205[00000000]              add AL, [a]                     ;;; AL = 08h  = 8
+    24                                      ;;; The result of (a+c/a) is in AL
+    25 00000013 88C3                        mov BL, AL                      ;;; BL = AL = 08h = 8
+    26                                      
+    27                                      ;;; Now we compute (a*a+b)
+    28                                      ;;; First, we multiply a with a
+    29 00000015 A0[00000000]                mov AL, [a]                     ;;; AL = 02h = 2
+    30 0000001A F62D[00000000]              imul byte [a]                   ;;; AX = AL * [a] = 2 * 2 = 4 = 0004h
+    31 00000020 6699                        cwd                             ;;; AX = 0004h
+    32                                                                      ;;; DX = 0000h
+    33 00000022 660305[01000000]            add AX, [b]                     ;;; AX = AX + [b] = 4 + 15 = 19 = 0013h
+    34 00000029 660315[03000000]            add DX, [b+2]                   ;;; DX = DX + [b+2] = 0 + 0 = 0000h
+    35                                      
+    36                                      ;;; The result of (a*a+b) is in DX:AX = 0000:0013h
+    37                                      
+    38                                      ;;; (a+c/a) is always going to be a byte
+    39                                      ;;; It is stored in BL
+    40                                      ;;; We convert the byte BL to a word
+    41                                      ;;; But for that we need to move BL to AL and we save the result from AX to another register
+    42 00000030 6689C1                      mov CX, AX                      ;;; CX = AX = 0013h
+    43 00000033 88D8                        mov AL, BL                      ;;; AL = BL = 08h
+    44                                      ;;; Now we convert the byte to a word
+    45 00000035 6698                        cbw
+    46                                      ;;;We move the result back into BX
+    47 00000037 6689C3                      mov BX, AX                      ;;; BX = AX = 0008h
+    48                                      ;;;And we move CX into AX
+    49 0000003A 6689C8                      mov AX, CX                      ;;; AX = CX = 0013h
+    50                                      
+    51                                      
+    52                                      ;;; So now we have (a*a+b) in DX:AX and (a+c/a) in BX
+    53                                      ;;; Now we divide
+    54 0000003D 66F7FB                      idiv BX                         ;;; AX = DX:AX / BX = 0000:0013h / 0008h = 19 / 8
+    55                                                                      ;;;    = 2 = 0002h
+    56                                                                      ;;; DX = DX:AX % BX = 0000:0013h % 0008h = 19 % 8
+    57                                                                      ;;;    = 3 = 0003h
+    58                                      
+    59                                      ;;; Now we move the q-word [x] into ECX:EBX
+    60 00000040 8B1D[06000000]              mov EBX, [x]                    ;;; EBX = FFFFFFB0h
+    61 00000046 8B0D[0A000000]              mov ECX, [x+4]                  ;;; ECX = FFFFFFFFh
+    62                                      
+    63                                      ;;; We convert AX to double word extended
+    64 0000004C 98                          cwde                            ;;; EAX = 00000002h
+    65                                      
+    66                                      ;;; Now we subtract (a*a+b)/(a+c/a) from x
+    67 0000004D 29C3                        sub EBX, EAX                    ;;; EBX = EBX - EAX = -80 - 2 = -82
+    68                                                                      ;;; EBX = FFFFFFAEh
+    69                                                                      ;;; ECX = FFFFFFFFh
+    70 0000004F 83DA00                      sbb EDX, 0                      ;;; In case CF is 1
+    71                                                                      
+    72                                      ;;; So the result is -82 and it is stored in ECX:EBX
+    73                                      ;;; ECX:EBX = FFFFFFFF:FFFFFFAEh
+    74 00000052 6A00                        push dword 0
+    75 00000054 FF15[00000000]              call [exit]

@@ -1,0 +1,69 @@
+     1                                  bits 32
+     2                                  global start
+     3                                  
+     4                                  extern exit
+     5                                  import exit msvcrt.dll
+     6                                  
+     7                                  segment data use32 class=data
+     8 00000000 06070606                    sir DB 6, 7, 6, 6
+     9                                      len_sir equ $-sir
+    10 00000004 0000<rept>                  rez times len_sir DW 0
+    11 0000000C <res 00000100>              verified_num RESB 256
+    12 0000010C 00                          it DB 0
+    13 0000010D 00000000                    old_esi DD 0
+    14 00000111 00                          element DB 0
+    15 00000112 00                          freq DB 0
+    16                                      
+    17                                  segment code use32 class=code
+    18                                  start:
+    19 00000000 BE[00000000]                mov ESI, sir
+    20 00000005 BF[04000000]                mov EDI, rez
+    21 0000000A B904000000                  mov ECX, len_sir
+    22 0000000F FC                          cld
+    23                                      
+    24                                      re:
+    25 00000010 AC                              lodsb    
+    26 00000011 A2[11010000]                    mov [element], AL 
+    27 00000016 C605[0C010000]00                mov byte [it], 0
+    28 0000001D 8935[0D010000]                  mov [old_esi], ESI
+    29 00000023 BE[00000000]                    mov ESI, sir
+    30 00000028 C605[12010000]00                mov byte [freq], 0
+    31 0000002F BB00000000                      mov EBX, 0
+    32 00000034 8A1D[11010000]                  mov BL, [element]
+    33                                          
+    34 0000003A 80BB[0C000000]00                cmp byte [verified_num+EBX], 0 
+    35 00000041 7547                            jne already_checked
+    36                                          
+    37                                          count:
+    38 00000043 AC                                  lodsb
+    39                                              
+    40 00000044 3A05[11010000]                      cmp AL, [element] ;; AL is the current element from the sequence
+    41 0000004A 7436                                je element_found
+    42                                              
+    43                                              cont:
+    44                                              
+    45 0000004C FE05[0C010000]                      inc byte [it]
+    46 00000052 B304                                mov BL, len_sir
+    47 00000054 381D[0C010000]                      cmp [it], BL
+    48 0000005A 75E7                            jne count
+    49                                      
+    50 0000005C 8B35[0D010000]                  mov ESI, [old_esi]
+    51 00000062 8A25[12010000]                  mov AH, [freq]
+    52 00000068 A0[11010000]                    mov AL, [element]
+    53 0000006D BB00000000                      mov EBX, 0
+    54 00000072 8A1D[11010000]                  mov BL, [element]
+    55 00000078 8883[0C000000]                  mov [verified_num+EBX], AL
+    56 0000007E 66AB                            stosw
+    57 00000080 E28E                        loop re
+    58                                      
+    59                                      element_found:
+    60 00000082 FE05[12010000]                  inc byte [freq]
+    61 00000088 EBC2                            jmp cont
+    62                                          
+    63                                      already_checked:
+    64 0000008A 8B35[0D010000]                  mov ESI, [old_esi]
+    65 00000090 E97BFFFFFF                      jmp re
+    66                                      
+    67                                      
+    68 00000095 6A00                        push dword 0
+    69 00000097 FF15[00000000]              call [exit]

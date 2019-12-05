@@ -6,15 +6,16 @@
         <Replace name="    " />
     </FindHistory>
     <History nbMaxFile="10" inSubMenu="no" customLength="-1">
-        <File filename="C:\path\asm_tools\npp\example.asm" />
-        <File filename="D:\DOCS\UBB\ASC\asm_tools\npp\Plugins\Config\asm_template_ro_.asm" />
-        <File filename="D:\DOCS\UBB\ASC\examples\template_en.asm" />
-        <File filename="d:\DOCS\UBB\ASC\asm_tools\npp\Plugins\Config\asm_template.asm" />
-        <File filename="d:\DOCS\UBB\ASC\asm_tools\npp\Plugins\Config\asm_template_ro.asm" />
-        <File filename="D:\work\check\test.asm" />
-        <File filename="D:\DOCS\UBB\ASC\intrebari_TODOs.txt" />
-        <File filename="Z:\home\george\Documents\programming\ASM_tools\asm_tools\npp\exemplu.obj" />
-        <File filename="Z:\home\george\Documents\programming\ASM_tools\asm_tools\npp\Plugins\Config\asm_template.asm" />
+        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex4.asm" />
+        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\some_example.asm" />
+        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex27_lab4.asm" />
+        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\test_dereferencers.asm" />
+        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex2_lab5.asm" />
+        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex23_lab6.asm" />
+        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex6_week9.asm" />
+        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\testaddressing.asm" />
+        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex5_lab9.asm" />
+        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex12346789.asm" />
     </History>
     <GUIConfigs>
         <GUIConfig name="ToolBar" visible="yes">standard</GUIConfig>
@@ -23,7 +24,7 @@
         <GUIConfig name="ScintillaViewsSplitter">vertical</GUIConfig>
         <GUIConfig name="UserDefineDlg" position="undocked">hide</GUIConfig>
         <GUIConfig name="TabSetting" replaceBySpace="yes" size="4" />
-        <GUIConfig name="AppPosition" x="981" y="34" width="943" height="1050" isMaximized="no" />
+        <GUIConfig name="AppPosition" x="974" y="5" width="946" height="1077" isMaximized="no" />
         <GUIConfig name="noUpdate" intervalDays="15" nextUpdateDate="20080426">no</GUIConfig>
         <GUIConfig name="Auto-detection">yes</GUIConfig>
         <GUIConfig name="CheckHistoryFiles">no</GUIConfig>
@@ -49,20 +50,20 @@
         <GUIConfig name="ScintillaGlobalSettings" enableMultiSelection="no" />
         <GUIConfig name="openSaveDir" value="0" defaultDirPath="" />
         <GUIConfig name="titleBar" short="no" />
-        <GUIConfig name="stylerTheme" path="Z:\home\george\Documents\programming\ASM_tools\asm_tools\npp\stylers.xml" />
+        <GUIConfig name="stylerTheme" path="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\stylers.xml" />
         <GUIConfig name="wordCharList" useDefault="yes" charsAdded="" />
         <GUIConfig name="delimiterSelection" leftmostDelimiter="40" rightmostDelimiter="41" delimiterSelectionOnEntireDocument="no" />
         <GUIConfig name="multiInst" setting="0" />
         <GUIConfig name="MISC" fileSwitcherWithoutExtColumn="no" backSlashIsEscapeCharacterForSql="yes" newStyleSaveDlg="no" isFolderDroppedOpenFiles="no" docPeekOnTab="no" docPeekOnMap="no" />
         <GUIConfig name="searchEngine" searchEngineChoice="2" searchEngineCustom="" />
         <GUIConfig name="SmartHighLight" matchCase="no" wholeWordOnly="yes" useFindSettings="no" onAnotherView="no">yes</GUIConfig>
-        <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" indentGuideLine="show" folderMarkStyle="box" lineWrapMethod="aligned" currentLineHilitingShow="show" scrollBeyondLastLine="no" disableAdvancedScrolling="no" wrapSymbolShow="hide" Wrap="yes" borderEdge="yes" edge="no" edgeNbColumn="80" zoom="2" zoom2="0" whiteSpaceShow="hide" eolShow="hide" borderWidth="2" smoothFont="no" />
-        <GUIConfig name="DockingManager" leftWidth="200" rightWidth="200" topHeight="200" bottomHeight="200">
+        <GUIConfig name="ScintillaPrimaryView" lineNumberMargin="show" bookMarkMargin="show" indentGuideLine="show" folderMarkStyle="box" lineWrapMethod="aligned" currentLineHilitingShow="show" scrollBeyondLastLine="no" disableAdvancedScrolling="no" wrapSymbolShow="hide" Wrap="no" borderEdge="yes" edge="no" edgeNbColumn="80" zoom="3" zoom2="0" whiteSpaceShow="hide" eolShow="hide" borderWidth="2" smoothFont="no" />
+        <GUIConfig name="DockingManager" leftWidth="200" rightWidth="200" topHeight="200" bottomHeight="261">
             <PluginDlg pluginName="AsmPlugin.dll" id="2" curr="3" prev="-1" isVisible="yes" />
             <ActiveTabs cont="0" activeTab="-1" />
             <ActiveTabs cont="1" activeTab="-1" />
             <ActiveTabs cont="2" activeTab="-1" />
-            <ActiveTabs cont="3" activeTab="-1" />
+            <ActiveTabs cont="3" activeTab="0" />
         </GUIConfig>
     </GUIConfigs>
     <ProjectPanels>

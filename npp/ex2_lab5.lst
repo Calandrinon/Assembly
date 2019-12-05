@@ -1,0 +1,48 @@
+     1                                  bits 32
+     2                                  global start
+     3                                  
+     4                                  extern exit
+     5                                  import exit msvcrt.dll
+     6                                  
+     7                                  segment data use32 class=data
+     8 00000000 21402324255E262A            special_characters DB '!', '@', '#', '$', '%', '^', '&', '*'
+     9                                      len_special_char_arr equ $-special_characters
+    10 00000008 2B3432614033242A            s DB '+', '4', '2', 'a', '@', '3', '$', '*'
+    11                                      len_s equ $-s
+    12 00000010 00<rept>                    d times len_s DB 0
+    13                                  
+    14                                  segment code use32 class=code
+    15                                  start:;;; 40, 24, 2A
+    16 00000000 BE00000000                  mov ESI, 0
+    17 00000005 BF00000000                  mov EDI, 0
+    18 0000000A B908000000                  mov ECX, len_s
+    19 0000000F FC                          cld
+    20 00000010 83F900                      cmp ECX, 0
+    21 00000013 7431                        je end_of_program
+    22                                      
+    23                                      get_special_chars:
+    24 00000015 BB00000000                      mov EBX, 0
+    25                                          check_if_character_is_special:
+    26 0000001A 8A83[00000000]                      mov AL, byte [special_characters+EBX]
+    27 00000020 3886[08000000]                      cmp byte [s+ESI], AL
+    28 00000026 740F                                je add_special_char_to_d
+    29 00000028 43                                  inc EBX
+    30 00000029 83FB08                              cmp EBX, len_special_char_arr
+    31 0000002C 72EC                                jb check_if_character_is_special
+    32                                          
+    33                                          update_iterators_and_exit_if_needed:
+    34 0000002E 46                                  inc ESI
+    35 0000002F 49                                  dec ECX
+    36 00000030 83F900                              cmp ECX, 0
+    37 00000033 7411                                je end_of_program
+    38 00000035 EBDE                                jmp get_special_chars
+    39                                      
+    40                                      add_special_char_to_d:
+    41 00000037 8A86[08000000]                  mov AL, byte [s+ESI]
+    42 0000003D 8887[10000000]                  mov byte [d+EDI], AL
+    43 00000043 47                              inc EDI
+    44 00000044 EBE8                            jmp update_iterators_and_exit_if_needed
+    45                                      
+    46                                      end_of_program:
+    47 00000046 6A00                            push dword 0
+    48 00000048 FF15[00000000]                  call [exit]

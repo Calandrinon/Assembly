@@ -1,0 +1,22 @@
+     1                                  bits 32
+     2                                  global start
+     3                                  
+     4                                  extern exit
+     5                                  import exit msvcrt.dll
+     6                                  
+     7                                  segment data use32 class=data
+     8 00000000 21402324255E262A            special_characters DB '!', '@', '#', '$', '%', '^', '&', '*'
+     9                                  
+    10                                  segment code use32 class=code
+    11                                  start:
+    12 00000000 B800000000                  mov EAX, 0
+    13 00000005 BB01000000                  mov EBX, 1
+    14 0000000A 8B8B[00000000]              mov ECX, [special_characters+EBX]
+    15                                      
+    16 00000010 3988[00000000]              cmp [special_characters+EAX], ECX
+    17 00000016 7200                        jb exit_label 
+    18                                      
+    19                                      
+    20                                      exit_label:
+    21 00000018 6A00                            push dword 0
+    22 0000001A FF15[00000000]                  call [exit]

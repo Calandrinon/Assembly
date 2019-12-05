@@ -1,0 +1,81 @@
+     1                                  bits 32
+     2                                  global start
+     3                                  
+     4                                  extern exit
+     5                                  import exit msvcrt.dll
+     6                                  
+     7                                  segment data use32 class=data
+     8 00000000 5228AD5D4FFA0100            A dq 0000000000000001111110100100111101011101101011010010100001010010b
+     9 00000008 00                          N db 0
+    10 00000009 00000000                    B dd 0
+    11 0000000D 00                          C db 0
+    12 0000000E 000F0000                    bitmask1 dd 111100000000b
+    13 00000012 00000F00                    bitmask2 dd 11110000000000000000b
+    14                                      
+    15                                  segment code use32 class=code
+    16                                  start:;;; 001
+    17                                      ;;; First we obtain the bitmask that is needed in ECX:EBX.
+    18 00000000 BB00000000                  mov EBX, 0
+    19 00000005 B907000000                  mov ECX, 111b
+    20                                      ;;; We move the 3 bits 3 positions to the left.
+    21                                      ;;; So the bits 32-34 will be shifted 3 positions to the left 
+    22                                      ;;; on positions 35-37 in the bitmask.
+    23 0000000A C1E103                      shl ECX, 3
+    24                                      
+    25                                      ;;; We move [A] into EDX:EAX so that we can apply the "and" 
+    26                                      ;;; bitwise operation with the bitmask.
+    27 0000000D A1[00000000]                mov EAX, dword [A]
+    28 00000012 8B15[04000000]              mov EDX, dword [A+4]
+    29                                      
+    30                                      ;;; Now we apply the "and" operation, first on the low dword of 
+    31                                      ;;; A, which in this case is EAX, and then on the high dword of A
+    32                                      ;;; which is stored in EDX.
+    33 00000018 21D8                        and EAX, EBX
+    34 0000001A 21CA                        and EDX, ECX
+    35                                      ;;; We shift the bits 35-37 3 positions to the right (the bits will be shifted)
+    36                                      ;;; on the positions 32-34) and we obtain the number in the first byte
+    37                                      ;;; of EDX which is DL.
+    38 0000001C C1EA03                      shr EDX, 3
+    39                                      
+    40                                      ;;; The result is moved into [N].
+    41 0000001F 8815[08000000]              mov byte [N], DL
+    42                                      
+    43                                      
+    44                                      
+    45                                      ;;; Now we want to obtain the number B that is required in the 
+    46                                      ;;; problem statement.
+    47                                      ;;; First, we copy the low d-word of A into EAX.
+    48 00000025 A1[00000000]                mov EAX, dword [A]
+    49 0000002A 8A0D[08000000]              mov CL, [N]     ;;; Now we move into the default operand of the ror instruction
+    50                                                      ;;; the number [N].
+    51 00000030 D3C8                        ror EAX, CL     ;;; CL = 1, EAX = 2ED69429h
+    52 00000032 A3[09000000]                mov [B], EAX    ;;; The result is stored in [B].
+    53                                      
+    54                                      
+    55                                      
+    56                                      ;;; Now we need to obtain the number C.
+    57                                      ;;; First, we need to obtain the bits 8-11 of B.
+    58                                      ;;; To do that, we will use the "and" instruction and the
+    59                                      ;;; first bitmask "bitmask1" on the number [B] which is still
+    60                                      ;;; stored in EAX as well.
+    61 00000037 2305[0E000000]              and EAX, [bitmask1]   
+    62                                      ;;; Now we shift the bits that we obtained with 8 positions to the right.
+    63                                      ;;; In this way, we will obtain the bits 8-11 of B(EAX) on the positions 
+    64                                      ;;; 0-3 of B(EAX).
+    65 0000003D C1E808                      shr EAX, 8 ;;; EAX = 4h
+    66                                      ;;; Now we move the 3 bits into the number [C]
+    67 00000040 A2[0D000000]                mov [C], AL
+    68                                      
+    69                                      
+    70                                      ;;; The next step is to get the bits 16-19 of [B]
+    71                                      ;;; For that, we will apply the "and" operation on [B] with the 
+    72                                      ;;; second bitmask
+    73 00000045 A1[09000000]                mov EAX, [B]
+    74 0000004A 2305[12000000]              and EAX, [bitmask2]
+    75 00000050 C1E80C                      shr EAX, 12
+    76 00000053 0905[0D000000]              or [C], EAX
+    77                                      
+    78                                      
+    79 00000059 6A00                        push dword 0
+    80 0000005B FF15[00000000]              call [exit]
+    81                                      

@@ -13,7 +13,6 @@ segment code use32 class=code
 start:
     ;;; Unsigned representation
     ;;; x-(a*a+b)/(a+c/a); a,c-byte; b-doubleword; x-qword
-    ;;;   d-word    word
     
     ;;;First we compute (a*a+b)
     mov AL, [a]                     ;;;AL = 2 = 02h 
@@ -54,7 +53,7 @@ start:
     
     ;;;Now we need to subtract AX (which is (a*a+b)/(a+c/a)) from x 
     ;;;But firstly, we move x into two 4-byte registers
-    ;;;We will chose ECX:EBX
+    ;;;We will choose ECX:EBX
     
     mov EBX, dword [x]              ;;;EBX= 00000050h = 80
     mov ECX, dword [x+4]            ;;;ECX= 00000000h

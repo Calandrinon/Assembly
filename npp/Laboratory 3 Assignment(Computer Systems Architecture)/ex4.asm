@@ -13,7 +13,6 @@ segment code use32 class=code
 start:
     ;;; Signed representation
     ;;; x-(a*a+b)/(a+c/a); a,c-byte; b-doubleword; x-qword
-    ;;;   d-word    byte
     
     ;;; First we compute (a+c/a)
     ;;; We convert c to a word
@@ -64,10 +63,11 @@ start:
     ;;; We convert AX to double word extended
     cwde                            ;;; EAX = 00000002h
     
-    ;;; Now we sub (a*a+b)/(a+c/a) from x
+    ;;; Now we subtract (a*a+b)/(a+c/a) from x
     sub EBX, EAX                    ;;; EBX = EBX - EAX = -80 - 2 = -82
                                     ;;; EBX = FFFFFFAEh
                                     ;;; ECX = FFFFFFFFh
+    sbb EDX, 0                      ;;; In case CF is 1
                                     
     ;;; So the result is -82 and it is stored in ECX:EBX
     ;;; ECX:EBX = FFFFFFFF:FFFFFFAEh

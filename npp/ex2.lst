@@ -1,0 +1,46 @@
+     1                                  bits 32
+     2                                  global start
+     3                                  
+     4                                  extern exit
+     5                                  import exit msvcrt.dll
+     6                                  
+     7                                  segment data use32 class=data
+     8 00000000 02                          a DB 2
+     9 00000001 0F00                        b DW 15
+    10 00000003 7D000000                    c DD 125
+    11 00000007 5000000000000000            d DQ 80
+    12                                      
+    13                                  segment code use32 class=code
+    14                                  start:
+    15                                      ;;;Signed representation
+    16                                      ;;;We need to compute (c+d-a)-(d-c)-b
+    17                                      
+    18                                      ;;;First we move d into EDX:EAX
+    19 00000000 A1[07000000]                mov EAX, [d]
+    20 00000005 8B15[0B000000]              mov EDX, [d+4]
+    21                                      ;;;EDX:EAX = 00000000:00000050h = 80
+    22                                      
+    23                                      ;;;Now we add the d-word [c] with the lower d-word of EDX:EAX, which is EAX
+    24 0000000B 0305[03000000]              add EAX, [c]                        ;;; EAX = EAX + [c] = 80 + 125 = 205
+    25 00000011 83D200                      adc EDX, 0                          ;;; EDX:EAX = 00000000:000000CDh = 205
+    26                                                                          
+    27                                      ;;;Now we subtract the byte [a]
+    28 00000014 2A05[00000000]              sub AL, [a]    
+    29 0000001A 80DC00                      sbb AH, 0
+    30                                                                          ;;;EDX:EAX = 00000000:000000CBh = 203
+    31                                      
+    32                                      ;;;We will do the operation (d-c) 
+    33 0000001D 8B1D[07000000]              mov EBX, [d]                        ;;; EBX = [d] = 80
+    34 00000023 8B0D[0B000000]              mov ECX, [d+4]                      ;;; ECX = [d+4] = 0
+    35                                                                          ;;;ECX:EBX = 00000000:00000050h
+    36 00000029 2B1D[03000000]              sub EBX, [c]                        ;;; EBX = EBX - [c] = 80 - 125 = -45
+    37 0000002F 83D900                      sbb ECX, 0                          ;;;ECX:EBX = FFFFFFFF:FFFFFFD3h = -45
+    38                                      
+    39 00000032 29D8                        sub EAX, EBX                        ;;; EAX = EAX - EBX = 203 - (-45) = 248
+    40 00000034 19CA                        sbb EDX, ECX                        ;;;EDX:EAX = 00000000:000000F8h
+    41                                      
+    42                                      ;;;We will subtract b from the rest of the expression
+    43 00000036 662B05[01000000]            sub AX, [b]
+    44                                      ;;;EDX:EAX = 00000000:000000E9h = 233
+    45 0000003D 6A00                        push dword 0
+    46 0000003F FF15[00000000]              call [exit]

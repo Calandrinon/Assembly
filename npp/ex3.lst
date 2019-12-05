@@ -1,0 +1,67 @@
+     1                                  bits 32
+     2                                  global start
+     3                                  
+     4                                  extern exit
+     5                                  import exit msvcrt.dll
+     6                                  
+     7                                  segment data use32 class=data
+     8 00000000 02                          a DB 2
+     9 00000001 0F000000                    b DD 15
+    10 00000005 7D                          c DB 125
+    11 00000006 5000000000000000            x DQ 80
+    12                                  segment code use32 class=code
+    13                                  start:
+    14                                      ;;; Unsigned representation
+    15                                      ;;; x-(a*a+b)/(a+c/a); a,c-byte; b-doubleword; x-qword
+    16                                      ;;;   d-word    word
+    17                                      
+    18                                      ;;;First we compute (a*a+b)
+    19 00000000 A0[00000000]                mov AL, [a]                     ;;;AL = 2 = 02h 
+    20 00000005 F625[00000000]              mul byte [a]                    ;;;AX = AL * [a] = 2 * 2 = 4 = 0004h
+    21                                      
+    22                                      ;;;Now we add b to a*a
+    23 0000000B 668B1D[01000000]            mov BX, [b]                     ;;;BX = 000Fh = 15
+    24 00000012 668B0D[03000000]            mov CX, [b+2]                   ;;;CX = 0000h = 0
+    25 00000019 6601C3                      add BX, AX                      ;;;EBX = 00000013h = 19
+    26 0000001C 6683D100                    adc CX, 0
+    27                                      ;;;The result of (a*a+b) is in CX:BX
+    28                                     
+    29                                      
+    30                                      
+    31                                      ;;; Now we compute (a+c/a)
+    32 00000020 A0[05000000]                mov AL, [c]                     ;;;AL = 7Dh = 125
+    33 00000025 B400                        mov AH, 0
+    34 00000027 F635[00000000]              div byte [a]                    ;;;AL = AX / [a] = 125 / 2 = 62 = 3Eh
+    35                                                                      ;;;AH = AX % [a] = 125 % 2 = 1 =  01h
+    36                                                                      ;;;AX = 013Eh
+    37 0000002D B400                        mov AH, 0;;;We don't need the remainder -> AX = 003Eh
+    38                                      ;;; We add a to (c/a)
+    39 0000002F 0205[00000000]              add AL, [a]                     ;;;AL = 40h = 64
+    40 00000035 80D400                      adc AH, 0                       ;;;AX = 0040h = 64
+    41                                      ;;;The result of (a+c/a) is in AX
+    42                                      
+    43                                      ;;;We move AX into SI and CX:BX into DX:AX
+    44 00000038 6689C6                      mov SI, AX                      ;;;SI = 0040h = 64
+    45 0000003B 6689D8                      mov AX, BX                      ;;;AX = 0013h = 19
+    46 0000003E 6689CA                      mov DX, CX                      ;;;DX = 0000h = 0 
+    47                                      ;;;Now (a*a+b) is in DX:AX and (a+c/a) is in SI
+    48                                      
+    49                                      
+    50                                      ;;;Now we do the operation (a*a+b)/(a+c/a)
+    51                                      
+    52 00000041 66F7F6                      div SI                          ;;;AX = DX:AX / SI = 19 / 64 = 0  = 0000h
+    53                                                                      ;;;DX = DX:AX % SI = 19 % 64 = 19 = 0013h
+    54                                      
+    55                                      ;;;Now we need to subtract AX (which is (a*a+b)/(a+c/a)) from x 
+    56                                      ;;;But firstly, we move x into two 4-byte registers
+    57                                      ;;;We will choose ECX:EBX
+    58                                      
+    59 00000044 8B1D[06000000]              mov EBX, dword [x]              ;;;EBX= 00000050h = 80
+    60 0000004A 8B0D[0A000000]              mov ECX, dword [x+4]            ;;;ECX= 00000000h
+    61                                                                      ;;;ECX:EBX = 00000000:00000050h = 80
+    62                                      
+    63 00000050 6629C3                      sub BX, AX                      ;;;BX = BX - AX = 80 - 0 = 80 = 50h
+    64                                                                      ;;;ECX:EBX = 00000000:00000050h = 80
+    65                                      
+    66 00000053 6A00                        push dword 0
+    67 00000055 FF15[00000000]              call [exit]

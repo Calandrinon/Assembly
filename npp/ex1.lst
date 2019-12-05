@@ -1,0 +1,57 @@
+     1                                  bits 32
+     2                                  global start
+     3                                  
+     4                                  extern exit
+     5                                  import exit msvcrt.dll
+     6                                  
+     7                                  segment data use32 class=data
+     8 00000000 02                          a DB 2
+     9 00000001 0F00                        b DW 15
+    10 00000003 7D000000                    c DD 125
+    11 00000007 5000000000000000            d DQ 80
+    12                                      
+    13                                  segment code use32 class=code
+    14                                  start:
+    15                                      ;;;We need to compute (c+c-a)-(d+d)-b
+    16                                      ;;;First we add c with c
+    17 00000000 66A1[03000000]              mov AX, word [c]   ;;; AX = word [c] = 125 = 007Dh
+    18 00000006 668B15[05000000]            mov DX, word [c+2] ;;; DX = word [c+2] = 0 = 0000h
+    19                                                         ;;; DX:AX = 0000:007Dh
+    20 0000000D 660305[03000000]            add AX, word [c]   ;;; AX = AX + word [c] = 125 + 125 = 250 = 00FAh
+    21 00000014 661315[05000000]            adc DX, word [c+2] ;;; DX = DX + 0 + CF = 0 + 0 + 0         = 0000h
+    22                                                         ;;; DX:AX = 0000:00FAh
+    23                                                         
+    24                                      ;;;Now we subtract a from (c+c)
+    25 0000001B 2A05[00000000]              sub AL, [a]        ;;; AL = AL - [a] = 250 - 2 = 248 = F8h
+    26                                                         ;;; DX:AX = 0000:00F8h
+    27 00000021 6652                        push DX
+    28 00000023 6650                        push AX
+    29 00000025 58                          pop EAX            ;;; So the result of (c+c-a) is stored in EAX
+    30                                                         ;;; EAX = 000000F8h
+    31                                      
+    32                                      
+    33                                      ;;;Now we store the quad word [d] into two double words, so in ECX:EBX
+    34 00000026 8B1D[07000000]              mov EBX, dword [d]
+    35 0000002C 8B0D[0B000000]              mov ECX, dword [d+4]
+    36                                      ;;;ECX:EBX = 00000000:00000050h
+    37                                      
+    38                                      ;;;We add [d] with ECX:EBX by adding the low d-word of [d] with EBX
+    39                                      ;;;and the high d-word of [d], basically [d+4], with ECX
+    40 00000032 031D[07000000]              add EBX, dword [d]
+    41 00000038 130D[0B000000]              adc ECX, dword [d+4]
+    42                                      ;;;The result of (d+d) is stored in ECX:EBX 
+    43                                      ;;;ECX:EBX = 00000000:000000A0h
+    44                                      
+    45                                      
+    46                                      ;;;Now we need to do the following subtraction (c+c-a)-(d+d)
+    47                                      ;;;(c+c-a) is stored in EAX, and (d+d) is stored in ECX:EBX
+    48 0000003E BA00000000                  mov EDX, 0         ;;;Conversion of EAX to EDX:EAX
+    49 00000043 29D8                        sub EAX, EBX       ;;;EAX = EAX - EBX = 248 - 160 = 88 = 00000058h
+    50 00000045 19CA                        sbb EDX, ECX       ;;;EDX = EDX - ECX = 0 - 0          = 00000000h
+    51                                      ;;;EDX:EAX = 00000000:00000058h    ---> (c+c-a)-(d+d)
+    52                                      
+    53                                      ;;;We will subtract the word [b] from the quad word EDX:EAX
+    54 00000047 662B05[01000000]            sub AX, [b] ;;;EAX = EAX - [b] = 88 - 15 = 73 = 00000049h 
+    55                                      ;;; So the result is 73 and stored in EDX:EAX
+    56 0000004E 6A00                        push dword 0
+    57 00000050 FF15[00000000]              call [exit]

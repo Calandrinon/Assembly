@@ -35,14 +35,12 @@ start:
     push dword format_scanf
     call [scanf]
     add ESP, 4*2
-    ;---------------------
+    
     mov EDX, 0
     mov EAX, [a]
     
     div dword [b]
     mov [rez], EAX
-    
-    
     
     push dword [rez]
     push dword [b]

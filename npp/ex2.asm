@@ -12,6 +12,7 @@ segment data use32 class=data
     
 segment code use32 class=code
 start:
+    ;;;Signed representation
     ;;;We need to compute (c+d-a)-(d-c)-b
     
     ;;;First we move d into EDX:EAX
@@ -21,9 +22,11 @@ start:
     
     ;;;Now we add the d-word [c] with the lower d-word of EDX:EAX, which is EAX
     add EAX, [c]                        ;;; EAX = EAX + [c] = 80 + 125 = 205
-                                        ;;; EDX:EAX = 00000000:000000CDh = 205
+    adc EDX, 0                          ;;; EDX:EAX = 00000000:000000CDh = 205
+                                        
     ;;;Now we subtract the byte [a]
     sub AL, [a]    
+    sbb AH, 0
                                         ;;;EDX:EAX = 00000000:000000CBh = 203
     
     ;;;We will do the operation (d-c) 
