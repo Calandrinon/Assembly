@@ -2,20 +2,21 @@
 <NotepadPlus>
     <FindHistory nbMaxFindHistoryPath="10" nbMaxFindHistoryFilter="10" nbMaxFindHistoryFind="10" nbMaxFindHistoryReplace="10" matchWord="no" matchCase="no" wrap="yes" directionDown="yes" fifRecuisive="yes" fifInHiddenFolder="no" dlgAlwaysVisible="no" fifFilterFollowsDoc="no" fifFolderFollowsDoc="no" searchMode="1" transparencyMode="1" transparency="150" dotMatchesNewline="no">
         <Filter name="" />
+        <Filter name="" />
+        <Find name="eax" />
         <Find name="\t" />
         <Replace name="    " />
     </FindHistory>
     <History nbMaxFile="10" inSubMenu="no" customLength="-1">
-        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex4.asm" />
-        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\some_example.asm" />
-        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex27_lab4.asm" />
-        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\test_dereferencers.asm" />
-        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex2_lab5.asm" />
-        <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex23_lab6.asm" />
         <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex6_week9.asm" />
         <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\testaddressing.asm" />
         <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex5_lab9.asm" />
         <File filename="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\ex12346789.asm" />
+        <File filename="Z:\home\calandrinon\Documents\Programming\Assembly\npp\coolstuff.asm" />
+        <File filename="Z:\home\calandrinon\Documents\Programming\Assembly\npp\homework_week12.asm" />
+        <File filename="Z:\home\calandrinon\Documents\Programming\Assembly\npp\bases.asm" />
+        <File filename="Z:\home\calandrinon\Documents\Programming\Assembly\npp\week12_save.asm" />
+        <File filename="Z:\home\calandrinon\Documents\Programming\Assembly\npp\longest_common_prefix_save.asm" />
     </History>
     <GUIConfigs>
         <GUIConfig name="ToolBar" visible="yes">standard</GUIConfig>
@@ -24,7 +25,7 @@
         <GUIConfig name="ScintillaViewsSplitter">vertical</GUIConfig>
         <GUIConfig name="UserDefineDlg" position="undocked">hide</GUIConfig>
         <GUIConfig name="TabSetting" replaceBySpace="yes" size="4" />
-        <GUIConfig name="AppPosition" x="974" y="5" width="946" height="1077" isMaximized="no" />
+        <GUIConfig name="AppPosition" x="-4" y="5" width="1928" height="1043" isMaximized="yes" />
         <GUIConfig name="noUpdate" intervalDays="15" nextUpdateDate="20080426">no</GUIConfig>
         <GUIConfig name="Auto-detection">yes</GUIConfig>
         <GUIConfig name="CheckHistoryFiles">no</GUIConfig>
@@ -50,7 +51,7 @@
         <GUIConfig name="ScintillaGlobalSettings" enableMultiSelection="no" />
         <GUIConfig name="openSaveDir" value="0" defaultDirPath="" />
         <GUIConfig name="titleBar" short="no" />
-        <GUIConfig name="stylerTheme" path="Z:\home\calandrinon\Documents\programming\Tools-For-x86-Assembly-Windows-Lab-Run-On-Linux\npp\stylers.xml" />
+        <GUIConfig name="stylerTheme" path="Z:\home\calandrinon\Documents\Programming\Assembly\npp\stylers.xml" />
         <GUIConfig name="wordCharList" useDefault="yes" charsAdded="" />
         <GUIConfig name="delimiterSelection" leftmostDelimiter="40" rightmostDelimiter="41" delimiterSelectionOnEntireDocument="no" />
         <GUIConfig name="multiInst" setting="0" />
@@ -63,7 +64,7 @@
             <ActiveTabs cont="0" activeTab="-1" />
             <ActiveTabs cont="1" activeTab="-1" />
             <ActiveTabs cont="2" activeTab="-1" />
-            <ActiveTabs cont="3" activeTab="0" />
+            <ActiveTabs cont="3" activeTab="-1" />
         </GUIConfig>
     </GUIConfigs>
     <ProjectPanels>

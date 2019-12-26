@@ -1,0 +1,80 @@
+     1                                  %ifndef _LONGEST_COMMON_PREFIX_ASM_
+     2                                  %define _LONGEST_COMMON_PREFIX_ASM_
+     3                                  
+     4                                  print_prefix:
+     5                                      ;; void print_prefix(char *string, int number_of_characters); -> prints the prefix with the length "number_of_characters"
+     6                                      
+     7 00000000 66678B442408                mov EAX, [ESP+8]
+     8 00000006 66678B5C2404                mov EBX, [ESP+4]
+     9 0000000C 67C6040300                  mov [EBX+EAX], byte 0
+    10                                      
+    11 00000011 6667FF742404                push dword [ESP+4]
+    12                                      call [printf]
+    12          ******************       error: symbol `printf' undefined
+    13 00000017 6683C404                    add ESP, 4
+    14                                      
+    15 0000001B C20800                      ret 4*2
+    16                                  
+    17                                  min:
+    18                                      ;; int min(int a, int b);
+    19 0000001E 66678B4C2404                mov ECX, [ESP+4]    ;; the first number
+    20 00000024 66678B542408                mov EDX, [ESP+8]    ;; the second number
+    21                                      
+    22 0000002A 6639CA                      cmp EDX, ECX
+    23 0000002D 7707                        ja .set_result
+    24 0000002F C20800                      ret 4*2
+    25                                      
+    26                                      .set_result:
+    27 00000032 6689CA                          mov EDX, ECX
+    28 00000035 C20800                          ret 4*2
+    29                                      
+    30                                  
+    31                                  longest_common_prefix:
+    32                                      ;; int longest_common_prefix(char *str1, char *str2, int l_str1, int l_str2);
+    33                                      
+    34 00000038 66678B442404                mov EAX, [ESP+4]   ;; the offset of the first string
+    35 0000003E 66678B5C2408                mov EBX, [ESP+8]   ;; the offset of the second string
+    36                                      
+    37                                      
+    38 00000044 6667FF74240C                push dword [ESP+12]   ;; [ESP+12] - the size of the first string
+    39 0000004A 6667FF742410                push dword [ESP+16]   ;; [ESP+16] - the size of the second string
+    40 00000050 E8CBFF                      call min        ;; moves into EDX the minimum between the two numbers
+    41                                      
+    42 00000053 6689D1                      mov ECX, EDX
+    43 00000056 666A00                      push dword 0    ;; [ESP+4] - here, we will store the length of the longest common prefix
+    44 00000059 6652                        push dword EDX  ;; [ESP] - here we will store EDX, the minimum of the two length of the strings
+    45                                      
+    46                                      .repeat:
+    47 0000005B 66678B3424                      mov ESI, [ESP]
+    48 00000060 6629CE                          sub ESI, ECX      ;; ESI = [ESP] - ECX
+    49                                          
+    50 00000063 678A1430                        mov DL, [EAX+ESI] ;; [EAX+ESI] - the character from the first string
+    51 00000067 673A1433                        cmp DL, [EBX+ESI] ;; [EBX+ESI] - the character from the second string is compared with the character from the first string
+    52 0000006B 7406                            je .increment_length
+    53 0000006D EB15                            jmp .print_longest_common_prefix
+    54                                          
+    55                                          .increment_length:
+    56 0000006F 6667FF442404                        inc dword [ESP+4]
+    57 00000075 E2E4                        loop .repeat
+    58                                      
+    59 00000077 6667837C240400              cmp dword [ESP+4], 0
+    60 0000007E EB14                        jmp .no_common_prefix_exception
+    61                                      
+    62                                      
+    63                                      .print_longest_common_prefix:
+    64 00000080 6667FF742404                    push dword [ESP+4]
+    65 00000086 6650                            push EAX
+    66 00000088 E875FF                          call print_prefix
+    67 0000008B 6683C408                        add ESP, 4*2
+    68 0000008F C3                              ret
+    69                                          
+    70                                      .no_common_prefix_exception:
+    71                                          push dword no_prefix_error_message
+    71          ******************       error: symbol `no_prefix_error_message' undefined
+    72                                          call [printf]
+    72          ******************       error: symbol `printf' undefined
+    73 00000090 6683C404                        add ESP, 4
+    74 00000094 6683C408                        add ESP, 4*2
+    75 00000098 C3                              ret
+    76                                  
+    77                                  %endif

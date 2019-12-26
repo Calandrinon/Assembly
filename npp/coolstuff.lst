@@ -1,0 +1,37 @@
+     1                                  bits 32
+     2                                  global start
+     3                                  
+     4                                  extern exit, printf
+     5                                  import exit msvcrt.dll
+     6                                  import printf msvcrt.dll
+     7                                  
+     8                                  segment data use32 class=data
+     9 00000000 616263646566676869-         format db "abcdefghijklmnopqrstuvwxyz", 0
+     9 00000009 6A6B6C6D6E6F707172-
+     9 00000012 737475767778797A00 
+    10                                  
+    11                                  segment code use32 class=code
+    12                                  
+    13                                  print_prefix:
+    14                                      ;;void print_prefix(char *string, int number_of_characters); -> prints the prefix with the length "number_of_characters"
+    15                                      
+    16 00000000 8B442408                    mov EAX, [ESP+8]
+    17 00000004 8B5C2404                    mov EBX, [ESP+4]
+    18 00000008 C6040300                    mov [EBX+EAX], byte 0
+    19                                      
+    20 0000000C FF742404                    push dword [ESP+4]
+    21 00000010 FF15[00000000]              call [printf]
+    22 00000016 83C404                      add ESP, 4
+    23                                      
+    24 00000019 C20800                      ret 4*2
+    25                                      
+    26                                  start:
+    27                                      
+    28 0000001C 6A06                        push dword 6
+    29 0000001E 68[00000000]                push dword format
+    30 00000023 E8D8FFFFFF                  call print_prefix
+    31                                      
+    32 00000028 6A00                        push dword 0
+    33 0000002A FF15[00000000]              call [exit]
+    34                                      
+    35                                      
