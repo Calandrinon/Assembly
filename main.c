@@ -14,20 +14,9 @@ int main() {
 		scanf("%d", &v[i]);
 	}
 
-	printf("The maximum value of the array is: %d\n", maxnum(v, n));
+	FILE *f = fopen("max.txt", "w");
+
+	fprintf(f, "The maximum value of the array in base 16 is: %x\n", maxnum(v,n));
+	//printf("The maximum value of the array is: %x\n", maxnum(v, n));
 	return 0;
 }
-
-/*
-int maxnum(int a[], int n) {
-	int max_number = -(1<<30);
-
-	for (int i = 0; i < n; i++) {
-		if (a[i] > max_number) {
-			max_number = a[i];
-		}
-	}
-
-	return max_number;
-}
-*/

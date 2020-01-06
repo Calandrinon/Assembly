@@ -12,7 +12,7 @@ maxnum:
 
     mov EDX, [EBP+8] ;; the offset of the array
     mov ECX, [EBP+12] ;; the number of elements of the array
-    mov EAX, -999999999 ;; the variable which contains the current maximum number in the array
+    mov EAX, -2000000000 ;; the variable which contains the current maximum number in the array
 
     .find_max_num:
         cmp EAX, [EDX]
