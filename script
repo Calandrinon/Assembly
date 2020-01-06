@@ -1,0 +1,4 @@
+rm *.o
+nasm -f elf32 maximum_number.asm -o maximum_number.o
+gcc -m32 -c main.c
+gcc -m32 main.o maximum_number.o
